@@ -40,26 +40,24 @@ def radio_player():
         print("test2")
         #instance = vlc.Instance()
         for url in cycle(urls):
-            print("Playing Radio")
-            print("test3")
+            print(url)
             skip_station = False
             start = time.time()
-            change = start + 30 * 60
-            while not skip_station:
-                print("test4")
-                while start <= change:
+            change = start + 3
 
-                    player = vlc.MediaPlayer()
-                    Media = vlc.Media(url)
-                    #Media_list = vlc.media_list_new([url])
-                    Media.get_mrl()
-                    player.set_media(Media)
+            print("station switched")
+            while time.time() <= change:
+                player = vlc.MediaPlayer()
+                Media = vlc.Media(url)
+                #Media_list = vlc.media_list_new([url])
+                Media.get_mrl()
+                player.set_media(Media)
 
-                    #list_player = instance.media_list_player_new()
-                    #list_player.set_media_list(Media_list)
-                    player.audio_set_volume(100)
-                    if player.play() == -1:
-                        print("Error playing")
+                #list_player = instance.media_list_player_new()
+                #list_player.set_media_list(Media_list)
+                player.audio_set_volume(100)
+                if player.play() == -1:
+                    print("Error playing")
 
 
 
