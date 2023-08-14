@@ -20,53 +20,69 @@ urls = [
 
 ]
     
-days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+# days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 # playlists = set(['pls','m3u'])
 
 
 def radio_player():
+    print(d.datetime.now().hour)
+    print(d.datetime.now().minute)
     today = d.date.today()
-    if today.weekday() < 5 & today.weekday() >= 0:
+    #if today.weekday() < 5 & today.weekday() >= 0:
         # setting how long to run the radio for
-        #day_start = time.time()
-        #day_end = day_start + 8.5*3600
-        #while time.time() <= day_end:
-        while d.datetime.now().hour < 18 & d.datetime.now().minute < 30:
-            instance = vlc.Instance()
+        # day_start = time.time()
+        # day_end = day_start + 8.5*3600
+        # while time.time() <= day_end:
+    #if d.datetime.now().hour >= 9:
+    #TODO Fix the minute check for while loop
+    while d.datetime.now().hour < 18:
+        #& d.datetime.now().minute < 30
+        print("test2")
+        #instance = vlc.Instance()
+        for url in cycle(urls):
+            print("Playing Radio")
+            print("test3")
+            skip_station = False
+            start = time.time()
+            change = start + 30 * 60
+            while not skip_station:
+                print("test4")
+                while start <= change:
 
-            # cycle through the list of urls
-            # repeatedly until 17:30
-            for url in cycle(urls):
-                skip_station = False
-                start = time.time()
-                change = start + 30 * 60
-                while not skip_station:
-                    while start <= change :
-                        player = instance.media_player_new()
-                        media = instance.media_new(url)
-                        media_list = instance.media_list_new([url])
-                        media.get_mrl()
-                        player.set_media(media)
+                    player = vlc.MediaPlayer()
+                    Media = vlc.Media(url)
+                    #Media_list = vlc.media_list_new([url])
+                    Media.get_mrl()
+                    player.set_media(Media)
 
-                        list_player = instance.media_list_player_new()
-                        list_player.set_media_list(media_list)
-                        player.audio_set_volume(100)
-                        if list_player.play() == -1:
-                            print("Error playing")
-                        else:
-                            s2 = "Playing Radio"
-                            print(s2)
+                    #list_player = instance.media_list_player_new()
+                    #list_player.set_media_list(Media_list)
+                    player.audio_set_volume(100)
+                    if player.play() == -1:
+                        print("Error playing")
+
+
+
+
+   # else:
+    print("radio stopped")
+
 
 def skip():
     skip_station = True
-schedule.every().at("09:00").do(radio_player())
 
 
-while True:
+
+
+radio_player()
+#schedule.every().at("09:00").do(radio_player())
+
+
+#while True:
     # Checks whether a scheduled task
     # is pending to run or not
-    schedule.run_pending()
-    time.sleep(1)
+ #   schedule.run_pending()
+  #  time.sleep(1)
 
     
 
