@@ -28,18 +28,20 @@ def radio_player():
     today = d.date.today()
     if today.weekday() < 5 & today.weekday() >= 0:
         # setting how long to run the radio for
-        day_start = time.time()
-        day_end = day_start + 8.5*3600
-        while time.time() <= day_end:
-            while True:
-                instance = vlc.Instance()
+        #day_start = time.time()
+        #day_end = day_start + 8.5*3600
+        #while time.time() <= day_end:
+        while d.datetime.now().hour < 18 & d.datetime.now().minute < 30:
+            instance = vlc.Instance()
 
-                # cycle through the list of urls
-                # repeatedly until 17:30
-                for url in cycle(urls):
-                    start = time.time()
-                    change = start + 30 * 60
-                    while start <= change:
+            # cycle through the list of urls
+            # repeatedly until 17:30
+            for url in cycle(urls):
+                skip_station = False
+                start = time.time()
+                change = start + 30 * 60
+                while not skip_station:
+                    while start <= change :
                         player = instance.media_player_new()
                         media = instance.media_new(url)
                         media_list = instance.media_list_new([url])
@@ -55,8 +57,11 @@ def radio_player():
                             s2 = "Playing Radio"
                             print(s2)
 
-
+def skip():
+    skip_station = True
 schedule.every().at("09:00").do(radio_player())
+
+
 while True:
     # Checks whether a scheduled task
     # is pending to run or not
