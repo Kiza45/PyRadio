@@ -27,49 +27,33 @@ urls = [
 def radio_player():
     print(d.datetime.now().hour)
     print(d.datetime.now().minute)
-    today = d.date.today()
-    #if today.weekday() < 5 & today.weekday() >= 0:
-        # setting how long to run the radio for
-        # day_start = time.time()
-        # day_end = day_start + 8.5*3600
-        # while time.time() <= day_end:
-    #if d.datetime.now().hour >= 9:
-    #TODO Fix the minute check for while loop
-    while d.datetime.now().hour < 18:
-        #& d.datetime.now().minute < 30
-        print("test2")
-        #instance = vlc.Instance()
-        for url in cycle(urls):
-            print(url)
-            skip_station = False
-            start = time.time()
-            change = start + 3
-
-            print("station switched")
-            while time.time() <= change:
-                player = vlc.MediaPlayer()
-                Media = vlc.Media(url)
-                #Media_list = vlc.media_list_new([url])
-                Media.get_mrl()
-                player.set_media(Media)
-
-                #list_player = instance.media_list_player_new()
-                #list_player.set_media_list(Media_list)
-                player.audio_set_volume(100)
-                if player.play() == -1:
-                    print("Error playing")
 
 
+    # setting how long to run the radio for
+    day_start = time.time()
+    day_end = day_start + 8.5*3600
+    while time.time() <= day_end:
+        while True:
+            instance = vlc.Instance()
 
+            # cycle through the list of urls
+            # repeatedly until 17:30
+            for url in cycle(urls):
+                print("station switched")
+                start = time.time()
+                change = start + 30 * 60
+                while start <= change:
+                    player = instance.media_player_new()
+                    media = instance.media_new(url)
+                    media_list = instance.media_list_new([url])
+                    media.get_mrl()
+                    player.set_media(media)
 
-   # else:
-    print("radio stopped")
-
-
-def skip():
-    skip_station = True
-
-
+                    list_player = instance.media_list_player_new()
+                    list_player.set_media_list(media_list)
+                    player.audio_set_volume(100)
+                    if list_player.play() == -1:
+                        print("Error playing")
 
 
 radio_player()
