@@ -1,6 +1,6 @@
 import vlc
 import time
-import schedule
+import subprocess
 from itertools import cycle
 import datetime as d
 
@@ -9,7 +9,7 @@ import datetime as d
 urls = [
 
     # 'file:///C:/PyRadio/heartxmas.m3u',
-    'file:///C:/PyRadio/radio1.pls',
+    'C:/PyRadio/radio1.pls',
     'file:///C:/PyRadio/virgin.m3u',
     'file:///C:/PyRadio/jassfm.pls',
     'file:///C:/PyRadio/kerrang.pls',
@@ -25,6 +25,7 @@ urls = [
 
 
 def radio_player():
+    vlc_path = r"C:\Program Files\VideoLAN\VLC\vlc.exe"
     print(d.datetime.now().hour)
     print(d.datetime.now().minute)
 
@@ -36,25 +37,13 @@ def radio_player():
         while True:
             instance = vlc.Instance()
 
-            # cycle through the list of urls
-            # repeatedly until 17:30
             for url in cycle(urls):
                 print("station switched")
                 start = time.time()
-                change = start + 30 * 60
+                change = start + 20
                 while start <= change:
-                    player = instance.media_player_new()
-                    media = instance.media_new(url)
-                    media_list = instance.media_list_new([url])
-                    media.get_mrl()
-                    player.set_media(media)
-
-                    list_player = instance.media_list_player_new()
-                    list_player.set_media_list(media_list)
-                    player.audio_set_volume(100)
-                    if list_player.play() == -1:
-                        print("Error playing")
-
+                    subprocess.Popen([vlc_path, url])
+                    time.sleep(19)
 
 radio_player()
 #schedule.every().at("09:00").do(radio_player())
