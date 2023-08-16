@@ -1,13 +1,12 @@
-import threading
 import time
 import subprocess
 import datetime as d
 
 
-# below is a list of URL/m3u/plsd files to play
+# below is a list of URL/m3u/pls files to play
 urls = [
     'C:/PyRadio/radio_stations/jassfm.pls',
-    #'C:/PyRadio/heartxmas.m3u',
+    # 'C:/PyRadio/heartxmas.m3u',
     "C:/PyRadio/radio_stations/capitalxtra.m3u",
     'C:/PyRadio/radio_stations/virgin.m3u',
     'C:/PyRadio/radio_stations/kerrang.pls',
@@ -23,19 +22,12 @@ urls = [
 # days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 # playlists = set(['pls','m3u'])
 
-def user_input():
-    global skip
-    while True:
-        user_input = input("press 's' to skip to the next station")
-        if user_input.lower == 's':
-            skip =True
-            break
+
 def radio_player():
     current_index = 0
     vlc_path = r"C:\Program Files\VideoLAN\VLC\vlc.exe"
     print(d.datetime.now().hour)
     print(d.datetime.now().minute)
-
 
     # setting how long to run the radio for
     day_start = time.time()
@@ -45,30 +37,29 @@ def radio_player():
             playlist_url = urls[current_index]
             with open(playlist_url, "r") as radio_file:
                 radio_content = radio_file.read()
+
             if "m3u" in playlist_url:
 
                 radio_lines = radio_content.splitlines()
                 radio_entries = [line for line in radio_lines if line and not line.startswith("#")]
 
-                #stream_url = None
-                #for line in radio_content.splitlines():
+                # stream_url = None
+                # for line in radio_content.splitlines():
                 #    if line.startswith("File1="):
-                 #       stream_url = line[len("File1="):]
-                  #      print(stream_url)
-                   #     break
+                #      stream_url = line[len("File1="):]
+                #      print(stream_url)
+                #     break
 
                 if radio_entries:
 
                     stream_url = radio_entries[0]
                     vlc_process = subprocess.Popen([vlc_path, "--playlist-autostart", stream_url])
-                    for x in range(15):
-                          if skip : # Sleep for 30 minutes (1800 seconds)
-                            vlc_process.terminate()  # Terminate the current VLC instance
-                            skip = False
-                            break
 
+                    time.sleep(15)
 
-                    if (current_index == (len(urls)-1)):
+                    vlc_process.terminate()  # Terminate the current VLC instance
+
+                    if current_index == (len(urls)-1):
                         current_index = 0
                     else:
                         current_index = (current_index + 1)
@@ -85,35 +76,13 @@ def radio_player():
                     vlc_process = subprocess.Popen([vlc_path, "--playlist-autostart", stream_url])
                     time.sleep(15)  # Sleep for 30 minutes (1800 seconds)
                     vlc_process.terminate()  # Terminate the current VLC instance
-                    if (current_index == (len(urls) - 1)):
+
+                    if current_index == (len(urls) - 1):
                         current_index = 0
                     else:
                         current_index = (current_index + 1)
-            #else:
 
 
-             #   print("Stream URL not found in playlist.")
-
-
-
-
-
-
-
-
-            #for url in cycle(urls):
-
-
-
-             #   print("station switched")
-              #  start = time.time()
-               # change = start + 20
-                #while start <= change:
-                 #   subprocess.Popen([vlc_path, url])
-                  #  time.sleep(19)
-input_thread = threading.Thread(target=user_input)
-input_thread.daemon = True
-input_thread.start()
 radio_player()
 
     
