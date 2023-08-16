@@ -1,20 +1,18 @@
-# import vlc
+import threading
 import time
 import subprocess
-import requests
-from itertools import cycle
 import datetime as d
 
 
 # below is a list of URL/m3u/plsd files to play
 urls = [
-    'C:/PyRadio/jassfm.pls',
+    'C:/PyRadio/radio_stations/jassfm.pls',
     #'C:/PyRadio/heartxmas.m3u',
-    "C:/PyRadio/capitalxtra.m3u",
-    'C:/PyRadio/virgin.m3u',
-    'C:/PyRadio/kerrang.pls',
-    'C:/PyRadio/bbc_radio_one.m3u8',
-    'C:/PyRadio/captialfm.m3u'
+    "C:/PyRadio/radio_stations/capitalxtra.m3u",
+    'C:/PyRadio/radio_stations/virgin.m3u',
+    'C:/PyRadio/radio_stations/kerrang.pls',
+    'C:/PyRadio/radio_stations/bbc_radio_one.m3u8',
+    'C:/PyRadio/radio_stations/captialfm.m3u'
 
 
     # 'file:///C:/PyRadio/magic.pls',
@@ -25,7 +23,13 @@ urls = [
 # days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 # playlists = set(['pls','m3u'])
 
-
+def user_input():
+    global skip
+    while True:
+        user_input = input("press 's' to skip to the next station")
+        if user_input.lower == 's':
+            skip =True
+            break
 def radio_player():
     current_index = 0
     vlc_path = r"C:\Program Files\VideoLAN\VLC\vlc.exe"
@@ -57,8 +61,13 @@ def radio_player():
 
                     stream_url = radio_entries[0]
                     vlc_process = subprocess.Popen([vlc_path, "--playlist-autostart", stream_url])
-                    time.sleep(15)  # Sleep for 30 minutes (1800 seconds)
-                    vlc_process.terminate()  # Terminate the current VLC instance
+                    for x in range(15):
+                          if skip : # Sleep for 30 minutes (1800 seconds)
+                            vlc_process.terminate()  # Terminate the current VLC instance
+                            skip = False
+                            break
+
+
                     if (current_index == (len(urls)-1)):
                         current_index = 0
                     else:
@@ -102,7 +111,9 @@ def radio_player():
                 #while start <= change:
                  #   subprocess.Popen([vlc_path, url])
                   #  time.sleep(19)
-vlc_process = None
+input_thread = threading.Thread(target=user_input)
+input_thread.daemon = True
+input_thread.start()
 radio_player()
 
     
