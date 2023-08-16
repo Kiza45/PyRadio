@@ -102,7 +102,7 @@ def radio_player():
                 #while start <= change:
                  #   subprocess.Popen([vlc_path, url])
                   #  time.sleep(19)
-
+vlc_process = None
 radio_player()
 
     
