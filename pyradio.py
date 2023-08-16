@@ -56,6 +56,7 @@ def radio_player():
                 if radio_entries:
 
                     stream_url = radio_entries[0]
+                    print(stream_url)
                     vlc_process = subprocess.Popen([vlc_path, "--playlist-autostart", stream_url])
                     time.sleep(15)  # Sleep for 30 minutes (1800 seconds)
                     vlc_process.terminate()  # Terminate the current VLC instance
